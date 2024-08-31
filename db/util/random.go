@@ -1,4 +1,4 @@
-package db
+package util
 
 import (
 	"math/rand"
@@ -27,4 +27,18 @@ func RandomString(n int) string {
 	}
 
 	return sb.String()
+}
+
+func RandomOwner() string {
+	return RandomString(6)
+}
+
+func RandomMoney() int64 {
+	return RandomInt(0, 1000)
+}
+
+func RandomCurrency() string {
+	currencies := []string{"EUR", "USD", "CAD"}
+	n := len(currencies)
+	return currencies[rand.Intn(n)]
 }

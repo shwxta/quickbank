@@ -1,14 +1,11 @@
 package db
 
 import (
-	"context"
+	"database/sql"
 	"log"
 	"os"
 	"testing"
-
-	"github.com/jackc/pgx/v5/pgxpool"
-
-	_ "github.com/lib/pq"
+	//"github.com/techschool/simplebank/util"
 )
 
 const (
@@ -17,14 +14,15 @@ const (
 )
 
 var testQueries *Queries
+var testDB *sql.DB
 
 func TestMain(m *testing.M) {
-	connPool, err := pgxpool.New(context.Background(), dbSource)
+	var err error
+	testDB, err = sql.Open(dbDriver, dbSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
 
-	testQueries = New(connPool)
-
+	testQueries = New(testDB)
 	os.Exit(m.Run())
 }

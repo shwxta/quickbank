@@ -8,17 +8,16 @@ import (
 
 	"github.com/shwxta/quickbank/api"
 	db "github.com/shwxta/quickbank/db/sqlc"
-)
-
-const (
-	dbDriver      = "postgres"
-	dbSource      = "postgresql://root:secret@localhost:5432/quickbank?sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
+	"github.com/shwxta/quickbank/util"
 )
 
 func main() {
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Cannot load config:", err)
+	}
 
-	conn, err := sql.Open(dbDriver, dbSource)
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
@@ -26,7 +25,7 @@ func main() {
 	store := db.NewStore(conn)
 	server := api.NewServer(store)
 
-	err = server.Start((serverAddress))
+	err = server.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("Cannot start server:", err)
 	}
